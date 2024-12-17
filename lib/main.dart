@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
           // bg
           onPrimary: Colors.grey[800]!,
           // text
-          secondary: Colors.grey[200]!,
+          secondary: Colors.grey[100]!,
           // bg 2
           onSecondary: Colors.grey[600]!,
           // text 2
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           // bg 3
           onTertiary: Colors.grey[500]!,
           // text 3
-          surface: Colors.grey[100]!,
+          surface: Colors.grey[200]!,
           // Light grey for cards/surfaces
           onSurface: Colors.black,
           // Text/icons on surface
@@ -85,6 +85,7 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: HomePage(),
         bottomNavigationBar: NavigationBar(
+          backgroundColor: Theme.of(context).colorScheme.primary,
           destinations: <Widget>[
             NavigationDestination(
               selectedIcon: Icon(

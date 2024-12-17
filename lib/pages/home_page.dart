@@ -1,29 +1,79 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../widgets.dart/modes.dart';
 
-enum _modes { Pomo, ShortBreak, LongBreak }
+enum modes { Pomo, ShortBreak, LongBreak }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final Map<String, dynamic> _mode = const {
     "Pomo": {
+      "key": "Pomo",
       "name": "Pomorodo",
-      "time": "25:00",
+      "time": 25,
     },
     "ShortBreak": {
+      "key": "ShortBreak",
       "name": "Short Break",
-      "time": "5:00",
+      "time": 5,
     },
     "LongBreak": {
+      "key": "LongBreak",
       "name": "Long Break",
-      "time": "15:00",
+      "time": 15,
     }
   };
 
-  void _handleMode() {}
+  String activeMode = "Pomo";
+
+  // Timer duration in seconds (25 minutes)
+  int _totalSeconds = 1 * 60;
+
+  // Display time string
+  String get _timeString {
+    int minutes = _totalSeconds ~/ 60;
+    int seconds = _totalSeconds % 60;
+    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
+  }
+
+  Timer? _timer; // Timer instance
+
+  void _startTimer() {
+    if (_timer != null) {
+      _timer!.cancel();
+    }
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        if (_totalSeconds > 0) {
+          _totalSeconds--;
+        } else {
+          timer.cancel(); // Stop timer when it reaches 0
+        }
+      });
+    });
+  }
+
+  void _handleMode(String modeName) {
+    setState(() {
+      this.activeMode = modeName;
+      print(this.activeMode);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Clean up timer
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,25 +86,45 @@ class HomePage extends StatelessWidget {
             width: 400,
             height: 330,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.tertiary,
-              borderRadius: BorderRadius.circular(8),
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).colorScheme.tertiary, // Shadow color
+                  offset: Offset(2, 2), // Shadow position (X, Y)
+                  blurRadius: 4, // How much the shadow should spread
+                  spreadRadius: 1, // Spread of the shadow
+                ),
+              ],
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  padding: EdgeInsets.symmetric(horizontal: 4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Modes(_mode["Pomo"]["name"], true),
-                      Modes(_mode["ShortBreak"]["name"], false),
-                      Modes(_mode["LongBreak"]["name"], false),
+                      Modes(
+                        _mode[modes.Pomo.name],
+                        activeMode == modes.Pomo.name,
+                        _handleMode,
+                      ),
+                      Modes(
+                        _mode[modes.ShortBreak.name],
+                        activeMode == modes.ShortBreak.name,
+                        _handleMode,
+                      ),
+                      Modes(
+                        _mode[modes.LongBreak.name],
+                        activeMode == modes.LongBreak.name,
+                        _handleMode,
+                      ),
                     ],
                   ),
                 ),
                 Text(
-                  _mode["Pomo"]["time"],
+                  _timeString,
                   style: GoogleFonts.varelaRound(
                     fontSize: 100,
                     fontWeight: FontWeight.bold,
@@ -62,7 +132,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _startTimer,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.onSurface,
                     foregroundColor: Colors.white,

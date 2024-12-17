@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 
 class Modes extends StatelessWidget {
-  const Modes(this.modeName, this.isActive, {super.key});
+  const Modes(this.mode, this.isActive, this.handleMode, {super.key});
 
-  final String modeName;
+  final Map<String, dynamic> mode;
   final bool isActive;
+  final Function(String) handleMode;
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +18,17 @@ class Modes extends StatelessWidget {
             : Theme.of(context).colorScheme.secondary,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: Text(
-        modeName,
-        style: TextStyle(
-          color: isActive
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.onSurface,
+      child: InkWell(
+        onTap: () {
+          handleMode(mode["key"]!);
+        },
+        child: Text(
+          mode["name"]!,
+          style: TextStyle(
+            color: isActive
+                ? Theme.of(context).colorScheme.primary
+                : Theme.of(context).colorScheme.onSurface,
+          ),
         ),
       ),
     );
