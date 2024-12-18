@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
   String activeMode = "Pomo";
 
   // Timer duration in seconds (25 minutes)
-  int _remainingSeconds = _mode[modes.Pomo].time * 60;
+  int _remainingSeconds = _mode[modes.Pomo.name].time * 60;
 
   // Display time string
   String get _timeString {

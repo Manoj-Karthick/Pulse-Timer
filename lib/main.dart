@@ -61,27 +61,14 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.primary,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.title,
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onPrimary,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            GestureDetector(
-              onTap: null,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 10),
-                child: const Icon(Icons.settings),
-              ),
+          centerTitle: true,
+          title: Text(
+            widget.title,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onPrimary,
+              fontWeight: FontWeight.bold,
             ),
-          ],
+          ),
         ),
         body: HomePage(),
         bottomNavigationBar: NavigationBar(
