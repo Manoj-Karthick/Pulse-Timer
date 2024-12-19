@@ -1,7 +1,17 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/home_page.dart';
+import 'package:learn_flutter/pages/login_page.dart';
 
-void main() {
+import 'firebase_options.dart';
+import 'pages/report_page.dart';
+import 'pages/settings_page.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
@@ -12,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Learn Flutter',
+      title: 'Pulse Timer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme(
@@ -21,41 +31,47 @@ class MyApp extends StatelessWidget {
           // bg
           onPrimary: Colors.grey[800]!,
           // text
-          secondary: Colors.grey[100]!,
+          secondary: Colors.grey[300]!,
           // bg 2
-          onSecondary: Colors.grey[600]!,
+          onSecondary: Colors.redAccent,
           // text 2
-          tertiary: Colors.grey[300]!,
+          tertiary: Colors.grey[500]!,
           // bg 3
-          onTertiary: Colors.grey[500]!,
+          onTertiary: Colors.grey[400]!,
           // text 3
           surface: Colors.grey[200]!,
           // Light grey for cards/surfaces
           onSurface: Colors.black,
           // Text/icons on surface
           inversePrimary: Colors.redAccent,
-          // Hightlights
+          // Highlights
           error: Colors.redAccent,
           // Standard error color
           onError: Colors.white, // Text/icons on error
         ),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Chick Timer'),
+      home: const LoginPage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  int _currentIndex = 0;
+
+  final List<Widget> _pages = [
+    HomePage(),
+    ReportPage(),
+    SettingsPage(),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,23 +79,25 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.primary,
           centerTitle: true,
           title: Text(
-            widget.title,
+            'Pulse Timer',
             style: TextStyle(
               color: Theme.of(context).colorScheme.onPrimary,
               fontWeight: FontWeight.bold,
             ),
           ),
         ),
-        body: HomePage(),
+        body: _pages[_currentIndex],
         bottomNavigationBar: NavigationBar(
+          selectedIndex: _currentIndex,
+          onDestinationSelected: (int index) {
+            setState(() {
+              _currentIndex = index; // Update the selected tab
+            });
+          },
           backgroundColor: Theme.of(context).colorScheme.primary,
           destinations: <Widget>[
             NavigationDestination(
-              selectedIcon: Icon(
-                Icons.home,
-                color: Theme.of(context).colorScheme.inversePrimary,
-              ),
-              icon: Icon(Icons.home_outlined),
+              icon: Icon(Icons.home),
               label: 'Home',
             ),
             NavigationDestination(

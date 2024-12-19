@@ -1,5 +1,5 @@
-package com.example.learn_flutter
+package com.pulsetimer.app
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()

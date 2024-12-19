@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -65,6 +66,8 @@ class _HomePageState extends State<HomePage> {
     if (_isRunning && _isPaused) {
       _resumeTimer();
     } else {
+      print('play sound');
+      print('completed play sound');
       setState(() {
         _isRunning = true;
         _isPaused = false;
@@ -136,6 +139,18 @@ class _HomePageState extends State<HomePage> {
       this.activeMode = mode.key;
       _resetTimer();
     });
+  }
+
+  void playStartSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource(
+        'assets/sounds/timer_start.mp3')); // Plays the sound from assets
+  }
+
+  void playStopSound() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource(
+        'assets/sounds/timer_stop.mp3')); // Plays the sound from assets
   }
 
   @override
