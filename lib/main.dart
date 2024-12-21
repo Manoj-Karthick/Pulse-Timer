@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/home_page.dart';
 import 'package:learn_flutter/pages/login_page.dart';
+import 'package:learn_flutter/providers/pulse_timer.dart';
+import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
 import 'pages/report_page.dart';
@@ -12,7 +14,12 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => PulseTimer(),
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -25,6 +32,13 @@ class MyApp extends StatelessWidget {
       title: 'Pulse Timer',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: Colors.black, // Set the global cursor color to black
+          selectionColor:
+              Colors.grey[300], // Optional: text selection background color
+          selectionHandleColor:
+              Colors.black, // Optional: selection handle color
+        ),
         colorScheme: ColorScheme(
           brightness: Brightness.light,
           primary: Colors.white,
