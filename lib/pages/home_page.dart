@@ -71,16 +71,14 @@ class HomePage extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: timer.isRunning
-                                ? timer.pauseTimer
-                                : timer.resumeTimer,
+                            onPressed: timer.isPaused
+                                ? timer.resumeTimer
+                                : timer.pauseTimer,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.onSurface,
-                              foregroundColor: Colors.white,
-                              // Text color
+                                  Theme.of(context).colorScheme.onPrimary,
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 24, vertical: 2),
+                                  horizontal: 16, vertical: 16),
                               // Button size
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
@@ -88,22 +86,28 @@ class HomePage extends StatelessWidget {
                               ),
                               elevation: 2,
                             ), // Button shadow),
-                            child: Text(
-                              timer.isPaused ? 'RESUME' : 'PAUSE',
-                              style: GoogleFonts.dongle(
-                                fontSize: 40,
-                                color: Theme.of(context).colorScheme.secondary,
-                              ),
-                            ),
+                            child: timer.isPaused
+                                ? Icon(
+                                    Icons.play_arrow_rounded,
+                                    size: 30,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  )
+                                : Icon(
+                                    Icons.pause,
+                                    size: 30,
+                                    color:
+                                        Theme.of(context).colorScheme.primary,
+                                  ),
                           ),
-                          SizedBox(width: 6),
+                          SizedBox(width: 20),
                           ElevatedButton(
                             onPressed: timer.resetTimer,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
-                                  Theme.of(context).colorScheme.primary,
+                                  Theme.of(context).colorScheme.secondary,
                               padding: EdgeInsets.symmetric(
-                                  horizontal: 18, vertical: 18),
+                                  horizontal: 16, vertical: 16),
                               // Button size
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
@@ -113,6 +117,7 @@ class HomePage extends StatelessWidget {
                             ), // Button shadow),
                             child: Icon(
                               Icons.restart_alt,
+                              size: 30,
                               color: Theme.of(context).colorScheme.onPrimary,
                             ),
                           )
@@ -122,8 +127,7 @@ class HomePage extends StatelessWidget {
                         onPressed: timer.startTimer,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
-                              Theme.of(context).colorScheme.onSurface,
-                          foregroundColor: Colors.white,
+                              Theme.of(context).colorScheme.onPrimary,
                           // Text color
                           padding:
                               EdgeInsets.symmetric(horizontal: 24, vertical: 2),
@@ -138,7 +142,7 @@ class HomePage extends StatelessWidget {
                           'START',
                           style: GoogleFonts.dongle(
                             fontSize: 40,
-                            color: Theme.of(context).colorScheme.secondary,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                       ),

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/pages/home_page.dart';
 import 'package:learn_flutter/pages/login_page.dart';
+import 'package:learn_flutter/providers/auth_provider.dart';
 import 'package:learn_flutter/providers/pulse_timer.dart';
 import 'package:provider/provider.dart';
 
@@ -15,8 +16,15 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => PulseTimer(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => CustomAuthProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PulseTimer(),
+        )
+      ],
       child: MyApp(),
     ),
   );
@@ -64,7 +72,15 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: LoginPage(),
+      home: Consumer<CustomAuthProvider>(
+        builder: (context, auth, _) {
+          if (auth.user != null) {
+            return MyHomePage();
+          } else {
+            return LoginPage();
+          }
+        },
+      ),
     );
   }
 }

@@ -1,75 +1,31 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learn_flutter/main.dart';
 import 'package:learn_flutter/pages/signup_page.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth_provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
-
     final TextEditingController emailController = TextEditingController();
-
     final TextEditingController passwordController = TextEditingController();
 
-    final FirebaseAuth _auth = FirebaseAuth.instance;
+    final auth = Provider.of<CustomAuthProvider>(context);
 
-    Future<void> signInWithEmailAndPassword() async {
-      try {
-        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim(),
-        );
+    void LoginUser() {
+      var email = emailController.text.trim();
+      var password = passwordController.text.trim();
+      auth.signInWithEmailAndPassword(email, password);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text(
-                  'Signed in successfully as ${userCredential.user?.email}')),
-        );
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
-        );
-      } on FirebaseAuthException catch (e) {
-        if (e.code == 'invalid-credential') {
-          print("Invalid Credential: ${e.message}");
-        } else if (e.code == 'user-not-found') {
-          print("User not found: ${e.message}");
-        } else if (e.code == 'wrong-password') {
-          print("Wrong password: ${e.message}");
-        }
-      } catch (e) {
-        print("Error signing in with email and password: $e");
-      }
-    }
-
-    Future<void> signInWithGoogle() async {
-      try {
-        // Trigger Google Sign-In flow
-        final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-        if (googleUser == null) return; // If user cancels
-
-        // Obtain authentication details
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-
-        // Create a new credential
-        final OAuthCredential credential = GoogleAuthProvider.credential(
-          accessToken: googleAuth.accessToken,
-          idToken: googleAuth.idToken,
-        );
-
-        // Sign in to Firebase with the credential
-        await _auth.signInWithCredential(credential);
-
-        // Successful sign-in, get user details
-        final User? user = _auth.currentUser;
-        print('Logged in as: ${user?.displayName}');
-      } catch (e) {
-        print("Error signing in with Google: $e");
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Signed in successfully')),
+      );
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const MyHomePage()),
+      );
     }
 
     return Scaffold(
@@ -140,7 +96,7 @@ class LoginPage extends StatelessWidget {
               width: 380,
               height: 45,
               child: ElevatedButton(
-                onPressed: signInWithEmailAndPassword,
+                onPressed: LoginUser,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.onSurface,
                   shape: RoundedRectangleBorder(
@@ -187,7 +143,7 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             GestureDetector(
-              onTap: signInWithGoogle,
+              onTap: auth.signInWithGoogle,
               child: Image(
                 image: AssetImage('assets/images/google.png'),
                 width: 380,

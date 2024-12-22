@@ -54,18 +54,20 @@ class PulseTimer with ChangeNotifier {
   Timer? _timer;
 
   void startTimer() {
-    if (_isRunning && _isPaused) {
-      resumeTimer();
-    } else {
-      _isRunning = true;
-      _isPaused = false;
-    }
-    if (_timer != null) {
+    if (_timer != null && _timer!.isActive) {
       _timer!.cancel();
     }
+    if (_isRunning && _isPaused) {
+      resumeTimer();
+      return;
+    }
+    _isRunning = true;
+    _isPaused = false;
+
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         _remainingSeconds--;
+        print('Running from startTimer');
         notifyListeners();
       } else {
         stopTimer();
@@ -75,12 +77,11 @@ class PulseTimer with ChangeNotifier {
   }
 
   void pauseTimer() {
-    if (_timer != null) {
-      _isRunning = false;
-      _isPaused = true;
-      _timer?.cancel();
-      notifyListeners();
-    }
+    print('Timer paused');
+    _isRunning = false;
+    _isPaused = true;
+    _timer?.cancel();
+    notifyListeners();
   }
 
   void updateTime(int seconds) {
@@ -90,10 +91,15 @@ class PulseTimer with ChangeNotifier {
 
   // Resume the Timer
   void resumeTimer() {
+    print('Timer Resumed');
+    if (_timer != null && _timer!.isActive) {
+      _timer!.cancel();
+    }
     _isRunning = true;
     _isPaused = false;
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
+        print('running from resume timer');
         _remainingSeconds--;
         notifyListeners();
       } else {
@@ -109,18 +115,23 @@ class PulseTimer with ChangeNotifier {
     notifyListeners();
   }
 
+  // Reset the Timer
+  void resetTimer() {
+    stopTimer();
+    _remainingSeconds = _mode[activeMode].time * 60;
+    notifyListeners();
+  }
+
   void handleMode(Mode mode) {
     this.activeMode = mode.key;
     resetTimer();
   }
 
-  // Reset the Timer
-  void resetTimer() {
-    _timer?.cancel();
-    _remainingSeconds = _mode[activeMode].time * 60;
-    _isRunning = false;
-    _isPaused = false;
-    notifyListeners();
+  void cancelTimer() {
+    if (_timer != null && _timer!.isActive) {
+      _timer?.cancel();
+      _timer = null;
+    }
   }
 
   void playStartSound() async {
@@ -133,13 +144,6 @@ class PulseTimer with ChangeNotifier {
     final player = AudioPlayer();
     await player.play(AssetSource(
         'assets/sounds/timer_stop.mp3')); // Plays the sound from assets
-  }
-
-  void cancelTimer() {
-    if (_timer != null) {
-      _timer?.cancel();
-      _timer = null;
-    }
   }
 
   @override
