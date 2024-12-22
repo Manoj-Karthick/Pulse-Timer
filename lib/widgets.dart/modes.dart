@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/pages/home_page.dart';
+
+import '../models/Mode.dart';
 
 class Modes extends StatelessWidget {
   const Modes(this.mode, this.isActive, this.handleMode, {super.key});

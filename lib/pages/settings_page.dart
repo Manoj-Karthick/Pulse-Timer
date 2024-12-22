@@ -14,7 +14,7 @@ class SettingsPage extends StatelessWidget {
       if (_auth.currentUser != null) {
         await _auth.signOut();
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
+          MaterialPageRoute(builder: (context) => LoginPage()),
         );
       }
     }

@@ -35,9 +35,8 @@ class MyApp extends StatelessWidget {
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: Colors.black, // Set the global cursor color to black
           selectionColor:
-              Colors.grey[300], // Optional: text selection background color
-          selectionHandleColor:
-              Colors.black, // Optional: selection handle color
+              Colors.blue[200], // Optional: text selection background color
+          selectionHandleColor: Colors.blue, // Optional: selection handle color
         ),
         colorScheme: ColorScheme(
           brightness: Brightness.light,
@@ -65,7 +64,7 @@ class MyApp extends StatelessWidget {
         ),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      home: LoginPage(),
     );
   }
 }

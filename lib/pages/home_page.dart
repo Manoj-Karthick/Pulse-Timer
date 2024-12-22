@@ -1,166 +1,18 @@
-import 'dart:async';
-
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:learn_flutter/providers/pulse_timer.dart';
+import 'package:provider/provider.dart';
 
+import '../constants/Modes.dart';
 import '../widgets.dart/modes.dart';
 
-enum modes { Pomo, ShortBreak, LongBreak }
-
-class HomePage extends StatefulWidget {
+class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class Mode {
-  final String key;
-  final String name;
-  final int time; // time in minutes
-
-  const Mode({
-    required this.key,
-    required this.name,
-    required this.time,
-  });
-}
-
-class _HomePageState extends State<HomePage> {
-  static const Map<String, dynamic> _mode = const {
-    "Pomo": Mode(
-      key: "Pomo",
-      name: "Pomodoro",
-      time: 25,
-    ),
-    "ShortBreak": Mode(
-      key: "ShortBreak",
-      name: "Short Break",
-      time: 5,
-    ),
-    "LongBreak": Mode(
-      key: "LongBreak",
-      name: "Long Break",
-      time: 15,
-    ),
-  };
-
-  String activeMode = "Pomo";
-
-  // Timer duration in seconds (25 minutes)
-  int _remainingSeconds = _mode[modes.Pomo.name].time * 60;
-
-  // Display time string
-  String get _timeString {
-    int minutes = _remainingSeconds ~/ 60;
-    int seconds = _remainingSeconds % 60;
-    return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
-  }
-
-  Timer? _timer; // Timer instance
-  bool _isRunning = false;
-  bool _isPaused = false;
-
-  void _startTimer() {
-    if (_isRunning && _isPaused) {
-      _resumeTimer();
-    } else {
-      print('play sound');
-      print('completed play sound');
-      setState(() {
-        _isRunning = true;
-        _isPaused = false;
-      });
-    }
-    if (_timer != null) {
-      _timer!.cancel();
-    }
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-        });
-      } else {
-        _stopTimer();
-      }
-    });
-  }
-
-  // Pause the Timer
-  void _pauseTimer() {
-    if (_timer != null) {
-      setState(() {
-        _isPaused = true;
-        _isRunning = false;
-      });
-      _timer!.cancel();
-    }
-  }
-
-  // Resume the Timer
-  void _resumeTimer() {
-    setState(() {
-      _isRunning = true;
-      _isPaused = false;
-    });
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (_remainingSeconds > 0) {
-        setState(() {
-          _remainingSeconds--;
-        });
-      } else {
-        _stopTimer();
-      }
-    });
-  }
-
-  // Reset the Timer
-  void _resetTimer() {
-    setState(() {
-      _timer?.cancel();
-      _remainingSeconds = _mode[activeMode].time * 60;
-      _isRunning = false;
-      _isPaused = false;
-    });
-  }
-
-  // Stop Timer
-  void _stopTimer() {
-    _timer?.cancel();
-    setState(() {
-      _isRunning = false;
-      _isPaused = false;
-    });
-  }
-
-  void _handleMode(Mode mode) {
-    setState(() {
-      this.activeMode = mode.key;
-      _resetTimer();
-    });
-  }
-
-  void playStartSound() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource(
-        'assets/sounds/timer_start.mp3')); // Plays the sound from assets
-  }
-
-  void playStopSound() async {
-    final player = AudioPlayer();
-    await player.play(AssetSource(
-        'assets/sounds/timer_stop.mp3')); // Plays the sound from assets
-  }
-
-  @override
-  void dispose() {
-    _timer?.cancel(); // Clean up timer
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final timer = Provider.of<PulseTimer>(context);
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -175,9 +27,8 @@ class _HomePageState extends State<HomePage> {
               boxShadow: [
                 BoxShadow(
                   color: Theme.of(context).colorScheme.tertiary, // Shadow color
-                  offset: Offset(2, 2), // Shadow position (X, Y)
-                  blurRadius: 4, // How much the shadow should spread
-                  spreadRadius: 1, // Spread of the shadow
+                  offset: Offset(1, 0.5), // Shadow position (X, Y)
+                  blurRadius: 2, // How much the shadow should spread
                 ),
               ],
             ),
@@ -190,37 +41,39 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Modes(
-                        _mode[modes.Pomo.name],
-                        activeMode == modes.Pomo.name,
-                        _handleMode,
+                        timer.mode[modes.ShortBreak.name],
+                        timer.activeMode == modes.ShortBreak.name,
+                        timer.handleMode,
                       ),
                       Modes(
-                        _mode[modes.ShortBreak.name],
-                        activeMode == modes.ShortBreak.name,
-                        _handleMode,
+                        timer.mode[modes.Focus.name],
+                        timer.activeMode == modes.Focus.name,
+                        timer.handleMode,
                       ),
                       Modes(
-                        _mode[modes.LongBreak.name],
-                        activeMode == modes.LongBreak.name,
-                        _handleMode,
+                        timer.mode[modes.LongBreak.name],
+                        timer.activeMode == modes.LongBreak.name,
+                        timer.handleMode,
                       ),
                     ],
                   ),
                 ),
                 Text(
-                  _timeString,
+                  timer.timeString,
                   style: GoogleFonts.varelaRound(
                     fontSize: 100,
                     fontWeight: FontWeight.bold,
                     height: 1.0,
                   ),
                 ),
-                (_isRunning || _isPaused)
+                (timer.isRunning || timer.isPaused)
                     ? Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
-                            onPressed: _isPaused ? _resumeTimer : _pauseTimer,
+                            onPressed: timer.isRunning
+                                ? timer.pauseTimer
+                                : timer.resumeTimer,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.onSurface,
@@ -236,7 +89,7 @@ class _HomePageState extends State<HomePage> {
                               elevation: 2,
                             ), // Button shadow),
                             child: Text(
-                              _isPaused ? 'RESUME' : 'PAUSE',
+                              timer.isPaused ? 'RESUME' : 'PAUSE',
                               style: GoogleFonts.dongle(
                                 fontSize: 40,
                                 color: Theme.of(context).colorScheme.secondary,
@@ -245,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           SizedBox(width: 6),
                           ElevatedButton(
-                            onPressed: _resetTimer,
+                            onPressed: timer.resetTimer,
                             style: ElevatedButton.styleFrom(
                               backgroundColor:
                                   Theme.of(context).colorScheme.primary,
@@ -266,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                         ],
                       )
                     : ElevatedButton(
-                        onPressed: _startTimer,
+                        onPressed: timer.startTimer,
                         style: ElevatedButton.styleFrom(
                           backgroundColor:
                               Theme.of(context).colorScheme.onSurface,

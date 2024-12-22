@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learn_flutter/main.dart';
-import 'package:learn_flutter/pages/signup_page.dart';
+import 'package:learn_flutter/pages/login_page.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class SignupPage extends StatelessWidget {
+  const SignupPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,17 +17,17 @@ class LoginPage extends StatelessWidget {
 
     final FirebaseAuth _auth = FirebaseAuth.instance;
 
-    Future<void> signInWithEmailAndPassword() async {
+    Future<void> createWithEmailAndPassword() async {
       try {
-        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim(),
         );
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Signed in successfully as ${userCredential.user?.email}')),
+              content: Text('Created user as ${userCredential.user?.email}')),
         );
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -66,7 +66,7 @@ class LoginPage extends StatelessWidget {
 
         // Successful sign-in, get user details
         final User? user = _auth.currentUser;
-        print('Logged in as: ${user?.displayName}');
+        print('Signed in as: ${user?.displayName}');
       } catch (e) {
         print("Error signing in with Google: $e");
       }
@@ -87,7 +87,7 @@ class LoginPage extends StatelessWidget {
             ),
             SizedBox(height: 20),
             const Text(
-              'Log in with email',
+              'Sign in with email',
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
@@ -135,12 +135,33 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
+            Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+              child: TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  hintText: 'Confirm your password',
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  contentPadding: const EdgeInsets.all(10),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    borderSide: BorderSide.none,
+                  ),
+                  fillColor: Colors.grey[300],
+                  filled: true,
+                  prefixIcon: Icon(Icons.lock),
+                  prefixIconColor: Theme.of(context).colorScheme.tertiary,
+                ),
+              ),
+            ),
             SizedBox(height: 20),
             SizedBox(
               width: 380,
               height: 45,
               child: ElevatedButton(
-                onPressed: signInWithEmailAndPassword,
+                onPressed: createWithEmailAndPassword,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).colorScheme.onSurface,
                   shape: RoundedRectangleBorder(
@@ -200,7 +221,7 @@ class LoginPage extends StatelessWidget {
               child: Row(
                 children: [
                   Text(
-                    'Don\'t have an Account?',
+                    'Already have an Account?',
                     style: TextStyle(
                       color: Theme.of(context).colorScheme.tertiary,
                       fontWeight: FontWeight.w500,
@@ -211,11 +232,11 @@ class LoginPage extends StatelessWidget {
                     onTap: () => {
                       Navigator.of(context).pushReplacement(
                         MaterialPageRoute(
-                            builder: (context) => const SignupPage()),
+                            builder: (context) => const LoginPage()),
                       )
                     },
                     child: Text(
-                      'Signup here',
+                      'Login here',
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.w500,
