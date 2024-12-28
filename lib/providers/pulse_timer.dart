@@ -63,7 +63,7 @@ class PulseTimer with ChangeNotifier {
     }
     _isRunning = true;
     _isPaused = false;
-
+    notifyListeners();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         _remainingSeconds--;
@@ -97,6 +97,7 @@ class PulseTimer with ChangeNotifier {
     }
     _isRunning = true;
     _isPaused = false;
+    notifyListeners();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_remainingSeconds > 0) {
         print('running from resume timer');
