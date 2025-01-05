@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
+import '../Model/Mode.dart';
 import '../constants/Modes.dart';
-import '../models/Mode.dart';
 
 class PulseTimer with ChangeNotifier {
   static const Map<String, dynamic> _mode = const {

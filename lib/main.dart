@@ -1,14 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/pages/home_page.dart';
-import 'package:learn_flutter/pages/login_page.dart';
+import 'package:learn_flutter/View//login_page.dart';
+import 'package:learn_flutter/View/home_page.dart';
 import 'package:learn_flutter/providers/auth_provider.dart';
 import 'package:learn_flutter/providers/pulse_timer.dart';
 import 'package:provider/provider.dart';
 
+import 'View/report_page.dart';
+import 'View/settings_page.dart';
 import 'firebase_options.dart';
-import 'pages/report_page.dart';
-import 'pages/settings_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

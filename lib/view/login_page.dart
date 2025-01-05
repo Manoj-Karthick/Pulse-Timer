@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:learn_flutter/View/signup_page.dart';
 import 'package:learn_flutter/main.dart';
-import 'package:learn_flutter/pages/signup_page.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';

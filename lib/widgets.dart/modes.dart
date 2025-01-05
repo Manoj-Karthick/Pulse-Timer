@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/Mode.dart';
+import '../Model/Mode.dart';
 
 class Modes extends StatelessWidget {
   const Modes(this.mode, this.isActive, this.handleMode, {super.key});
