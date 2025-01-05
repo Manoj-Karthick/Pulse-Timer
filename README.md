@@ -1,4 +1,4 @@
-# learn_flutter
+# Pulse Timer
 
 A new Flutter project.
 
