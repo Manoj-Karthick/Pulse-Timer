@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learn_flutter/View/login_page.dart';
-import 'package:learn_flutter/main.dart';
+import 'package:learn_flutter/homepage.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});
@@ -30,7 +30,7 @@ class SignupPage extends StatelessWidget {
               content: Text('Created user as ${userCredential.user?.email}')),
         );
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } on FirebaseAuthException catch (e) {
         if (e.code == 'invalid-credential') {

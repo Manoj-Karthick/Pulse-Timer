@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/View/signup_page.dart';
-import 'package:learn_flutter/main.dart';
+import 'package:learn_flutter/homepage.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth_provider.dart';
@@ -24,7 +24,7 @@ class LoginPage extends StatelessWidget {
         SnackBar(content: Text('Signed in successfully')),
       );
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
+        MaterialPageRoute(builder: (context) => const HomePage()),
       );
     }
 

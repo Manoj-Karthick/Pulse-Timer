@@ -1,82 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:learn_flutter/constants/Modes.dart';
-import 'package:learn_flutter/providers/pulse_timer.dart';
 import 'package:learn_flutter/ticker.dart';
 import 'package:learn_flutter/timer/bloc/timer_bloc.dart';
-import 'package:learn_flutter/widgets.dart/modes.dart';
-import 'package:provider/provider.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class TimerPage extends StatelessWidget {
+  const TimerPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => TimerBloc(ticker: Ticker()),
-      child: const HomeView(),
+      child: const TimerView(),
     );
   }
 }
 
-class HomeView extends StatelessWidget {
-  const HomeView({super.key});
+class TimerView extends StatelessWidget {
+  const TimerView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Container(
-            margin: EdgeInsets.all(12),
-            padding: EdgeInsets.all(12),
-            width: 400,
-            height: 330,
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Theme.of(context).colorScheme.tertiary, // Shadow color
-                  offset: Offset(1, 0.5), // Shadow position (X, Y)
-                  blurRadius: 2, // How much the shadow should spread
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Modes(
-                        timer.mode[modes.ShortBreak.name],
-                        timer.activeMode == modes.ShortBreak.name,
-                        timer.handleMode,
-                      ),
-                      Modes(
-                        timer.mode[modes.Focus.name],
-                        timer.activeMode == modes.Focus.name,
-                        timer.handleMode,
-                      ),
-                      Modes(
-                        timer.mode[modes.LongBreak.name],
-                        timer.activeMode == modes.LongBreak.name,
-                        timer.handleMode,
-                      ),
-                    ],
-                  ),
-                ),
-                TimerText(),
-                Actions(),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        TimerText(),
+        Actions(),
+      ],
     );
   }
 }
