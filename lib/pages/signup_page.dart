@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:learn_flutter/View/login_page.dart';
-import 'package:learn_flutter/homepage.dart';
+import 'package:learn_flutter/pages/homepage.dart';
 
 class SignupPage extends StatelessWidget {
   const SignupPage({super.key});

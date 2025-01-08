@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:learn_flutter/timer/view/timer_page.dart';
+import 'package:learn_flutter/timer_mode/timer_mode.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -25,7 +26,13 @@ class HomePage extends StatelessWidget {
                 ),
               ],
             ),
-            child: TimerPage(),
+            child: Column(
+              children: [
+                TimerModePage(),
+                SizedBox(height: 30),
+                TimerPage(),
+              ],
+            ),
           ),
         ],
       ),

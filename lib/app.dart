@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:learn_flutter/homepage.dart';
+import 'package:learn_flutter/pages/homepage.dart';
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});

@@ -25,6 +25,9 @@ class TimerView extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TimerText(),
+        SizedBox(
+          height: 30,
+        ),
         Actions(),
       ],
     );
